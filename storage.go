@@ -1,29 +1,38 @@
 package main
 
 import (
-  "os"
+  "io/ioutil"
   "gonum.org/v1/hdf5"
 )
 
 type Db struct {
   fname string
-  data hdf5.CommonFG
+  path  string
+  edges byte[]
+  nodes byte[]
+  links byte[]
+}
+
+func (db *Db) load_file(ftype string) err {
+  b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s.csv",db.path,ftype))
+  if err != nil {
+    err
+  }
+  switch ftype {
+    case "edges":
+      db.edges = b
+      break
+    case "nodes":
+      db.nodes = b
+      break
+    case "links":
+      db.links = b
+      break
+  }
+
+  return nil
 }
 
 func loadDb(fname string) (*Db,error) {
-  var f *hdf5.File
-  var err error
-  if _, err = os.Stat(fname); os.IsNotExist(err) {
-    f, err = hdf5.CreateFile(fname,1)
-    if err != nil {
-      return &Db{},err
-    }
-  }else{
-    f, err = hdf5.OpenFile(fname,1)
-    if err != nil {
-      return &Db{},err
-    }
-  }
   
-  return &Db{},nil
 }
