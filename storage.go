@@ -2,21 +2,27 @@ package main
 
 import (
   "io/ioutil"
-  "gonum.org/v1/hdf5"
+  "os"
+  "fmt"
 )
 
 type Db struct {
   fname string
-  path  string
-  edges byte[]
-  nodes byte[]
-  links byte[]
+  edges []byte
+  nodes []byte
+  links []byte
 }
 
-func (db *Db) load_file(ftype string) err {
-  b, err := ioutil.ReadFile(fmt.Sprintf("%s/%s.csv",db.path,ftype))
-  if err != nil {
-    err
+func (db *Db) loadFile(ftype string) error {
+  var b []byte
+  var err error
+  if _,err = os.Stat(fmt.Sprintf("%s/%s.csv",db.fname,ftype)); os.IsNotExist(err) {
+    b = []byte{}
+  }else{
+    b, err = ioutil.ReadFile(fmt.Sprintf("%s/%s.csv",db.fname,ftype))
+    if err != nil {
+      return err
+    }
   }
   switch ftype {
     case "edges":
@@ -29,10 +35,17 @@ func (db *Db) load_file(ftype string) err {
       db.links = b
       break
   }
-
   return nil
 }
 
+func (db *Db) printGraph() {
+  fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\n",string(db.nodes),string(db.edges),string(db.links))
+}
+
 func loadDb(fname string) (*Db,error) {
-  
+  out := &Db{fname: fname}
+  out.loadFile("edges")
+  out.loadFile("nodes")
+  out.loadFile("links")
+  return out,nil
 }

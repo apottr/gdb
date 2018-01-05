@@ -7,12 +7,13 @@ import (
 
 func main(){
   dbfname := os.Args[1]
-  q := os.Args[2]
+  //q := os.Args[2]
   db,err := loadDb(dbfname)
   if err != nil {
     panic(err)
   }
-  db.Query(q)
+  db.printGraph()
+  //db.Query(q)
 }
 
 
