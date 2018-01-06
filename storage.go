@@ -4,42 +4,47 @@ import (
   "io/ioutil"
   "os"
   "fmt"
+  "bytes"
 )
 
 type Db struct {
   fname string
-  edges []byte
-  nodes []byte
-  links []byte
+  edges [][]byte
+  nodes [][]byte
+  links [][]byte
 }
 
 func (db *Db) loadFile(ftype string) error {
   var b []byte
   var err error
-  if _,err = os.Stat(fmt.Sprintf("%s/%s.csv",db.fname,ftype)); os.IsNotExist(err) {
+  if _,err = os.Stat(fmt.Sprintf("%s/%s.jf",db.fname,ftype)); os.IsNotExist(err) {
     b = []byte{}
   }else{
-    b, err = ioutil.ReadFile(fmt.Sprintf("%s/%s.csv",db.fname,ftype))
+    b, err = ioutil.ReadFile(fmt.Sprintf("%s/%s.jf",db.fname,ftype))
     if err != nil {
       return err
     }
   }
   switch ftype {
     case "edges":
-      db.edges = b
+      db.edges = bytes.Split(b,[]byte("\n"))
       break
     case "nodes":
-      db.nodes = b
+      db.nodes = bytes.Split(b,[]byte("\n"))
       break
     case "links":
-      db.links = b
+      db.links = bytes.Split(b,[]byte("\n"))
       break
   }
   return nil
 }
 
 func (db *Db) printGraph() {
-  fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\n",string(db.nodes),string(db.edges),string(db.links))
+  fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\n",db.nodes,db.edges,db.links)
+}
+
+func (db *Db) getDataFromLine(line int, dtype string) (map[string]string,error) {
+
 }
 
 func loadDb(fname string) (*Db,error) {
