@@ -1,6 +1,7 @@
 package main
 
 import (
+  "encoding/json"
   "io/ioutil"
   "os"
   "fmt"
@@ -43,8 +44,18 @@ func (db *Db) printGraph() {
   fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\n",db.nodes,db.edges,db.links)
 }
 
-func (db *Db) getDataFromLine(line int, dtype string) (map[string]string,error) {
-
+func (db *Db) getDataFromLine(line int, dtype string) (interface{},error) {
+  var out interface{}
+  var err error
+  switch dtype {
+    case "edges":
+      err = json.Unmarshal(db.edges[line],&out)
+    case "nodes":
+      err = json.Unmarshal(db.nodes[line],&out)
+    case "links":
+      err = json.Unmarshal(db.links[line],&out)
+  }
+  return out,err
 }
 
 func loadDb(fname string) (*Db,error) {

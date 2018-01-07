@@ -2,6 +2,7 @@ package main
 
 import (
   "os"
+  "fmt"
 )
 
 
@@ -13,6 +14,11 @@ func main(){
     panic(err)
   }
   db.printGraph()
+  data, err := db.getDataFromLine(0,"nodes")
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println(data.(map[string]interface{}))
   //db.Query(q)
 }
 
