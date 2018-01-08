@@ -10,6 +10,7 @@ import (
 
 type Db struct {
   fname string
+  graphs [][]byte
   edges [][]byte
   nodes [][]byte
   links [][]byte
@@ -26,42 +27,51 @@ func (db *Db) loadFile(ftype string) error {
       return err
     }
   }
+  data := bytes.Split(b,[]byte("\n"))
   switch ftype {
     case "edges":
-      db.edges = bytes.Split(b,[]byte("\n"))
+      db.edges = data
       break
     case "nodes":
-      db.nodes = bytes.Split(b,[]byte("\n"))
+      db.nodes = data
       break
     case "links":
-      db.links = bytes.Split(b,[]byte("\n"))
+      db.links = data
       break
+    case "graphs":
+      db.graphs = data
   }
   return nil
 }
 
-func (db *Db) printGraph() {
-  fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\n",db.nodes,db.edges,db.links)
+func (db *Db) PrintGraph() {
+  fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\ngraphs: %s\n",db.nodes,db.edges,db.links,db.graphs)
 }
 
-func (db *Db) getDataFromLine(line int, dtype string) (interface{},error) {
+func (db *Db) GetDataFromLine(line int, dtype string) (interface{},error) {
   var out interface{}
   var err error
   switch dtype {
     case "edges":
       err = json.Unmarshal(db.edges[line],&out)
+      break
     case "nodes":
       err = json.Unmarshal(db.nodes[line],&out)
+      break
     case "links":
       err = json.Unmarshal(db.links[line],&out)
+      break
+    case "graphs":
+      err = json.Unmarshal(db.graphs[line],&out)
   }
   return out,err
 }
 
-func loadDb(fname string) (*Db,error) {
+func LoadDb(fname string) (*Db,error) {
   out := &Db{fname: fname}
   out.loadFile("edges")
   out.loadFile("nodes")
   out.loadFile("links")
+  out.loadFile("graphs")
   return out,nil
 }

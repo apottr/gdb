@@ -1,1 +1,4 @@
-{"hello": "world"}
+{"name": "ab", "directed": 0}
+{"name": "bc", "directed": 1}
+{"name": "cd", "directed": 0}
+{"name": "bd", "directed": 0}
