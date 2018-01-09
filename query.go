@@ -5,7 +5,9 @@ import "fmt"
 
 
 func QueryParser(qtext string) {
-  //
+  re := regexp.MustCompile("'.+'|\".+\"|[^,]+")
+  s := r.FindAllString(qtext,-1)
+  fmt.Printf("%#v")
 }
 
 func (db *Db) Query (q string) error {
