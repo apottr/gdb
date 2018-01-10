@@ -21,7 +21,7 @@ func QueryParser(qtext string) error {
     "command": s[0],
     "graph": s[1],
     "edge": s[2],
-    "node": s[3]
+    "node": s[3],
   }
   switch q["command"] {
     case "insert":

@@ -44,6 +44,10 @@ func (db *Db) loadFile(ftype string) error {
   return nil
 }
 
+func (db *Db) saveFile(ftype string) error {
+  return ioutil.WriteFile(fmt.Sprintf("%s/%s.jf",db.fname,ftype),os.ModeAppend)
+}
+
 func (db *Db) PrintGraph() {
   fmt.Printf("nodes: %s\nedges: %s\nlinks: %s\ngraphs: %s\n",db.nodes,db.edges,db.links,db.graphs)
 }
@@ -65,6 +69,32 @@ func (db *Db) GetDataFromLine(line int, dtype string) (interface{},error) {
       err = json.Unmarshal(db.graphs[line],&out)
   }
   return out,err
+}
+
+func (db *Db) PutData(data interface{}, dtype string) error {
+  d,err := json.Marshal(data)
+  if err != nil {
+    return err
+  }
+  switch dtype {
+    case "edges":
+      db.edges = append(db.edges,d)
+      break
+    case "nodes":
+      db.nodes = append(db.nodes,d)
+      break
+    case "links":
+      db.links = append(db.links,d)
+      break
+    case "graphs":
+      db.graphs = append(db.graphs,d)
+      break
+  }
+  return nil
+}
+
+func SaveDb() error {
+  
 }
 
 func LoadDb(fname string) (*Db,error) {
