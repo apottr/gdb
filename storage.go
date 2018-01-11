@@ -93,8 +93,12 @@ func (db *Db) PutData(data interface{}, dtype string) error {
   return nil
 }
 
-func SaveDb() error {
-  
+func (db *Db) SaveDb() error {
+  db.saveFile("edges")
+  db.saveFile("nodes")
+  db.saveFile("links")
+  db.saveFile("graphs")
+
 }
 
 func LoadDb(fname string) (*Db,error) {

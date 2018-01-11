@@ -12,13 +12,8 @@ func main(){
   if err != nil {
     panic(err)
   }
-  //db.PrintGraph()
-  //data, err := db.GetDataFromLine(0,"nodes")
-  //if err != nil {
-  //  panic(err)
-  //}
-  //fmt.Println(data.(map[string]interface{}))
   db.Query(q)
+  db.SaveDb()
 }
 
 
